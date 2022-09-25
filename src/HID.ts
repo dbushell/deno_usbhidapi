@@ -1,4 +1,5 @@
 import {hidapi} from './hidapi.ts';
+import * as utils from './utils.ts';
 
 const api = hidapi.symbols;
 
@@ -33,19 +34,40 @@ export class HID {
     }
     let device = new Deno.UnsafePointerView(enumerate);
     while (device) {
-      const HIDInfo: HIDInfo = {
-        path: Deno.UnsafePointerView.getCString(device.getBigUint64(0)),
+      const hidInfo: HIDInfo = {
+        // path: Deno.UnsafePointerView.getCString(device.getBigUint64(0)),
+        path: utils.decodeUTF8(
+          Deno.UnsafePointerView.getArrayBuffer(device.getBigUint64(0), 256)
+        ),
         vendorId: device.getUint16(8),
         productId: device.getUint16(10),
-        serial: device.getBigUint64(12 + 4),
+        // serial: device.getBigUint64(12 + 4),
+        serial: utils.decodeUTF16(
+          Deno.UnsafePointerView.getArrayBuffer(
+            device.getBigUint64(12 + 4),
+            256
+          )
+        ),
         release: device.getUint16(24),
-        manufacturer: device.getBigUint64(26 + 6),
-        product: device.getBigUint64(34 + 6),
+        // manufacturer: device.getBigUint64(26 + 6),
+        manufacturer: utils.decodeUTF16(
+          Deno.UnsafePointerView.getArrayBuffer(
+            device.getBigUint64(26 + 6),
+            256
+          )
+        ),
+        // product: device.getBigUint64(34 + 6),
+        product: utils.decodeUTF16(
+          Deno.UnsafePointerView.getArrayBuffer(
+            device.getBigUint64(34 + 6),
+            256
+          )
+        ),
         usagePage: device.getUint16(48),
         usage: device.getUint16(50),
         interface: device.getUint32(52)
       };
-      devices.push(HIDInfo);
+      devices.push(hidInfo);
       const next = device.getBigUint64(56);
       device = next ? new Deno.UnsafePointerView(next) : null;
     }
