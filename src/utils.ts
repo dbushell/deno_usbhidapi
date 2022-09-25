@@ -1,7 +1,7 @@
 export const decodeUTF8 = (buffer: ArrayBuffer): string => {
   const view = new DataView(buffer);
   let i = 0;
-  while (view.getUint8(i) !== 0) i++;
+  while (i < view.byteLength && view.getUint8(i) !== 0) i++;
   return new TextDecoder('utf-8').decode(buffer.slice(0, i));
 };
 
