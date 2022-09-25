@@ -42,7 +42,7 @@ deno test --unstable --allow-all src/test.ts
 * ["Add support for HID API"](https://github.com/denoland/deno/issues/13893) — Deno issue discussion.
 * [littledivy/webusb](https://github.com/littledivy/webusb) — WebUSB API implementation in Rust (and Deno).
 * [node-hid](https://github.com/node-hid/node-hid/) — Node.js bindings.
-* [Deno StreamDeck](https://github.com/dbushell/deno_streamdeck) — built with this library.
+* [Deno Stream Deck](https://github.com/dbushell/deno_streamdeck) — built with this library.
 
 ## License
 
