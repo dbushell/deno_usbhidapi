@@ -26,6 +26,14 @@ Building from source on a Raspberry Pi installs at:
 
 On Windows see [HIDAPI Releases](https://github.com/libusb/hidapi/releases/) (I've not tested Windows).
 
+## Testing
+
+There is a basic Deno test to check the HIDAPI library defined by the `DENO_USBHIDAPI` environment variable.
+
+```sh
+deno test --unstable --allow-all src/test.ts
+```
+
 ## Resources
 
 * [libusb/hidapi](https://github.com/libusb/hidapi/) — HIDAPI library for Windows, Linux, FreeBSD and macOS.
