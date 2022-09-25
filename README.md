@@ -8,7 +8,7 @@ The module exports `hidapi` library symbols and `HID` wrapper class.
 
 ## Usage
 
-Install or build the [HIDAPI](https://github.com/libusb/hidapi/) library (e.g. `brew install hidapi`).
+Install or build the [HIDAPI](https://github.com/libusb/hidapi/) library (e.g. `brew install hidapi`). Tested with `hidapi-0.12.0`.
 
 Set the `DENO_USBHIDAPI` environment variable to the dynamic library path.
 

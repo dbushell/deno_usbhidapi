@@ -32,6 +32,7 @@ export const SYMBOLS = {
     nonblocking: true
   },
 
+  // Set the device handle to be non-blocking.
   hid_set_nonblocking: {parameters: ['pointer', 'i32'], result: 'i32'},
 
   // Send a Feature report to the device.
@@ -46,6 +47,7 @@ export const SYMBOLS = {
     result: 'i32'
   },
 
+  // Get a input report from a HID device.
   hid_get_input_report: {
     parameters: ['pointer', 'buffer', 'usize'],
     result: 'i32'
@@ -78,6 +80,7 @@ export const SYMBOLS = {
     result: 'i32'
   },
 
+  // Get a string describing the last error which occurred.
   hid_error: {parameters: ['pointer'], result: 'buffer'},
 
   // Get a runtime version of the library.
