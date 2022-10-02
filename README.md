@@ -4,7 +4,7 @@ Deno [FFI](https://deno.land/manual/runtime/ffi_api) bindings for the [HIDAPI](h
 
 This _work in progress_ uses **unstable** Deno APIs and requries the `--unstable`, `--allow-ffi`, and `--allow-env` flags.
 
-The module exports `hidapi` library symbols and `HID` wrapper class.
+The module exports `hidapi` library symbols and `hid` wrapper functions.
 
 ## Usage
 
