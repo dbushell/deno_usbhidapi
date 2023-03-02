@@ -1,8 +1,9 @@
 import {
   assertEquals,
   assertRejects
-} from 'https://deno.land/std@0.157.0/testing/asserts.ts';
+} from 'https://deno.land/std@0.178.0/testing/asserts.ts';
 import {hidapi} from './hidapi.ts';
+import * as hid from './hid.ts';
 import * as utils from './utils.ts';
 
 Deno.test('HIDAPI missing', () => {
@@ -17,17 +18,23 @@ Deno.test('HIDAPI missing', () => {
 
 Deno.test('HIDAPI version number', () => {
   const buffer = Deno.UnsafePointerView.getArrayBuffer(
-    hidapi.symbols.hid_version(),
+    hidapi.symbols.hid_version()!,
     24
   );
   const view = new DataView(buffer);
-  assertEquals(view.getUint8(4), 12);
+  assertEquals(view.getUint8(4), 13);
 });
 
-Deno.test('HIDAPI version string ("0.12.0")', () => {
+Deno.test('HIDAPI version string ("0.13.x")', () => {
   const buffer = Deno.UnsafePointerView.getArrayBuffer(
-    hidapi.symbols.hid_version_str(),
+    hidapi.symbols.hid_version_str()!,
     32
   );
-  assertEquals(utils.decodeUTF8(buffer), '0.12.0');
+  assertEquals(utils.decodeUTF8(buffer).startsWith('0.13.'), true);
+});
+
+Deno.test('HID enumerate devices', () => {
+  const devices = hid.enumerate();
+  console.log(`Found ${devices.length} HID devices`);
+  assertEquals(devices.length > 0, true);
 });

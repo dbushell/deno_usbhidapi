@@ -14,42 +14,53 @@ export const exit = (): void => {
 
 export const enumerate = (vendorId = 0, productId = 0): HIDInfo[] => {
   const devices: HIDInfo[] = [];
-  const enumerate = BigInt(api.hid_enumerate(vendorId, productId));
+  const enumValue = api.hid_enumerate(vendorId, productId);
+  const enumerate = BigInt(Deno.UnsafePointer.value(enumValue));
   if (!enumerate) {
-    api.hid_free_enumeration(enumerate);
+    api.hid_free_enumeration(enumValue);
     return devices;
   }
-  let device: any = new Deno.UnsafePointerView(enumerate);
+  let device: null | Deno.UnsafePointerView = new Deno.UnsafePointerView(
+    enumValue!
+  );
   while (device) {
     const hidInfo: HIDInfo = {
-      // path: Deno.UnsafePointerView.getCString(device.getBigUint64(0)),
       path: utils.decodeUTF8(
-        Deno.UnsafePointerView.getArrayBuffer(device.getBigUint64(0), 256)
+        Deno.UnsafePointerView.getArrayBuffer(
+          Deno.UnsafePointer.create(device.getBigUint64(0))!,
+          256
+        )
       ),
       vendorId: device.getUint16(8),
       productId: device.getUint16(10),
-      // serial: device.getBigUint64(12 + 4),
       serial: utils.decodeUTF16(
-        Deno.UnsafePointerView.getArrayBuffer(device.getBigUint64(12 + 4), 256)
+        Deno.UnsafePointerView.getArrayBuffer(
+          Deno.UnsafePointer.create(device.getBigUint64(12 + 4))!,
+          256
+        )
       ),
       release: device.getUint16(24),
-      // manufacturer: device.getBigUint64(26 + 6),
       manufacturer: utils.decodeUTF16(
-        Deno.UnsafePointerView.getArrayBuffer(device.getBigUint64(26 + 6), 256)
+        Deno.UnsafePointerView.getArrayBuffer(
+          Deno.UnsafePointer.create(device.getBigUint64(26 + 6))!,
+          256
+        )
       ),
-      // product: device.getBigUint64(34 + 6),
       product: utils.decodeUTF16(
-        Deno.UnsafePointerView.getArrayBuffer(device.getBigUint64(34 + 6), 256)
+        Deno.UnsafePointerView.getArrayBuffer(
+          Deno.UnsafePointer.create(device.getBigUint64(34 + 6))!,
+          256
+        )
       ),
       usagePage: device.getUint16(48),
       usage: device.getUint16(50),
       interface: device.getUint32(52)
     };
     devices.push(hidInfo);
-    const next = device.getBigUint64(56);
+    const next = Deno.UnsafePointer.create(device.getBigUint64(56));
     device = next ? new Deno.UnsafePointerView(next) : null;
   }
-  api.hid_free_enumeration(enumerate);
+  api.hid_free_enumeration(enumValue);
   return devices;
 };
 
@@ -58,11 +69,12 @@ export const open = (
   productId: number,
   serialNumber: Uint8Array | null = null
 ): bigint => {
-  return BigInt(api.hid_open(vendorId, productId, serialNumber));
+  const value = api.hid_open(vendorId, productId, serialNumber);
+  return BigInt(Deno.UnsafePointer.value(value));
 };
 
 export const close = (device: bigint): void => {
-  api.hid_close(device);
+  api.hid_close(Deno.UnsafePointer.create(device));
 };
 
 export const read = async (
@@ -70,7 +82,11 @@ export const read = async (
   length: number
 ): Promise<Uint8Array> => {
   const data = new Uint8Array(length);
-  const result = await api.hid_read(device, data, length);
+  const result = await api.hid_read(
+    Deno.UnsafePointer.create(device),
+    data,
+    length
+  );
   if (result < 0) {
     throw new Error('Failed to read from device');
   }
@@ -83,7 +99,12 @@ export const readTimeout = (
   ms: number
 ): Uint8Array | null => {
   const data = new Uint8Array(length);
-  const result = api.hid_read_timeout(device, data, length, ms);
+  const result = api.hid_read_timeout(
+    Deno.UnsafePointer.create(device),
+    data,
+    length,
+    ms
+  );
   if (result < 0) {
     throw new Error('Failed to read from device');
   }
@@ -91,18 +112,30 @@ export const readTimeout = (
 };
 
 export const write = (device: bigint, data: Uint8Array): void => {
-  const result = api.hid_write(device, data, data.length);
+  const result = api.hid_write(
+    Deno.UnsafePointer.create(device),
+    data,
+    data.length
+  );
   if (result < 0) {
     throw new Error('Failed to write to device');
   }
 };
 
 export const sendFeatureReport = (device: bigint, data: Uint8Array): void => {
-  api.hid_send_feature_report(device, data, data.length);
+  api.hid_send_feature_report(
+    Deno.UnsafePointer.create(device),
+    data,
+    data.length
+  );
 };
 
 export const getFeatureReport = (device: bigint, data: Uint8Array): void => {
-  const result = api.hid_get_feature_report(device, data, data.length);
+  const result = api.hid_get_feature_report(
+    Deno.UnsafePointer.create(device),
+    data,
+    data.length
+  );
   if (result < 0) {
     throw new Error('Failed to get feature report from device');
   }
