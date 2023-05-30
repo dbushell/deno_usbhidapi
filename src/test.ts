@@ -22,15 +22,15 @@ Deno.test('HIDAPI version number', () => {
     24
   );
   const view = new DataView(buffer);
-  assertEquals(view.getUint8(4), 13);
+  assertEquals(view.getUint8(4), 14);
 });
 
-Deno.test('HIDAPI version string ("0.13.x")', () => {
+Deno.test('HIDAPI version string ("0.14.x")', () => {
   const buffer = Deno.UnsafePointerView.getArrayBuffer(
     hidapi.symbols.hid_version_str()!,
     32
   );
-  assertEquals(utils.decodeUTF8(buffer).startsWith('0.13.'), true);
+  assertEquals(utils.decodeUTF8(buffer).startsWith('0.14.'), true);
 });
 
 Deno.test('HID enumerate devices', () => {
