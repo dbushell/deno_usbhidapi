@@ -111,7 +111,7 @@ export const readTimeout = (
   return data;
 };
 
-export const write = (device: bigint, data: Uint8Array): void => {
+export const write = (device: bigint, data: Uint8Array): number => {
   const result = api.hid_write(
     Deno.UnsafePointer.create(device),
     data,
@@ -120,17 +120,19 @@ export const write = (device: bigint, data: Uint8Array): void => {
   if (result < 0) {
     throw new Error('Failed to write to device');
   }
+  return result;
 };
 
-export const sendFeatureReport = (device: bigint, data: Uint8Array): void => {
-  api.hid_send_feature_report(
+export const sendFeatureReport = (device: bigint, data: Uint8Array): number => {
+  const result = api.hid_send_feature_report(
     Deno.UnsafePointer.create(device),
     data,
     data.length
   );
+  return result;
 };
 
-export const getFeatureReport = (device: bigint, data: Uint8Array): void => {
+export const getFeatureReport = (device: bigint, data: Uint8Array): number => {
   const result = api.hid_get_feature_report(
     Deno.UnsafePointer.create(device),
     data,
@@ -139,4 +141,20 @@ export const getFeatureReport = (device: bigint, data: Uint8Array): void => {
   if (result < 0) {
     throw new Error('Failed to get feature report from device');
   }
+  return result;
+};
+
+export const getReportDescriptor = (
+  device: bigint,
+  data: Uint8Array
+): number => {
+  const result = api.hid_get_report_descriptor(
+    Deno.UnsafePointer.create(device),
+    data,
+    data.length
+  );
+  if (result < 0) {
+    throw new Error('Failed to get report descriptor from device');
+  }
+  return result;
 };
