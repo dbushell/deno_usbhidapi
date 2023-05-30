@@ -74,9 +74,15 @@ export const SYMBOLS = {
     result: 'i32'
   },
 
-  // hid_get_device_info: {parameters: ['pointer'], result: 'pointer'},
+  // Get a string from a HID device, based on its string index.
   hid_get_indexed_string: {
     parameters: ['pointer', 'i32', 'buffer', 'usize'],
+    result: 'i32'
+  },
+
+  // Get a report descriptor from a HID device.
+  hid_get_report_descriptor: {
+    parameters: ['pointer', 'buffer', 'usize'],
     result: 'i32'
   },
 
