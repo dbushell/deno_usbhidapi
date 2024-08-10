@@ -44,10 +44,6 @@ deno test --unstable --allow-all src/test.ts
 * [node-hid](https://github.com/node-hid/node-hid/) — Node.js bindings.
 * [Deno Stream Deck](https://github.com/dbushell/deno_streamdeck) — built with this library.
 
-## License
-
-MIT License
-
 * * *
 
-[MIT License](/LICENSE) | Copyright © 2023 [David Bushell](https://dbushell.com) | [@dbushell](https://twitter.com/dbushell)
+[MIT License](/LICENSE) | Copyright © 2023 [David Bushell](https://dbushell.com)
